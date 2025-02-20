@@ -1,0 +1,13 @@
+# Powershell
+# set NAT e.g. for Hyper-V
+New-VMSwitch -SwitchName "NATSwitch" -SwitchType Internal
+New-NetIPAddress -IPAddress 192.168.100.1 -PrefixLength 24 -InterfaceAlias "vEthernet (NATSwitch)"
+New-NetNat -Name "NATNetwork" -InternalIPInterfaceAddressPrefix 192.168.100.0/24
+
+Get-VMSwitch
+Get-NetIPAddress | Where-Object { $_.IPAddress -eq "192.168.100.1" }
+Get-NetNat
+
+Remove-VMSwitch -Name "NATSwitch" -Force
+Remove-NetIPAddress -IPAddress 192.168.0.1
+Remove-NetNat -Name "NATNetwork" -Confirm:$false
